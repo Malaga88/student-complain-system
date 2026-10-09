@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' — Complaint Desk' : 'Complaint Desk — ATBU' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="topbar">
+    <a class="brand" href="/">Complaint<span>Desk</span></a>
+    <nav>
+      <% if (currentUser) { %>
+        <% if (currentUser.role === 'student') { %>
+          <a href="/student/dashboard">My complaints</a>
+          <a href="/student/complaints/new">New complaint</a>
+        <% } else { %>
+          <a href="/staff/dashboard">All complaints</a>
+        <% } %>
+        <span class="who"><%= currentUser.fullName %></span>
+        <form action="/logout" method="POST">
+          <button class="link" type="submit">Log out</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Log in</a>
+        <a href="/register">Register</a>
+      <% } %>
+    </nav>
+  </div>

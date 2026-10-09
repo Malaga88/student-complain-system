@@ -1,0 +1,38 @@
+<% locals.title = complaint.subject %>
+<%- include('../partials/header') %>
+
+  <div class="page">
+    <p><a href="/student/dashboard">&larr; Back to my complaints</a></p>
+
+    <div class="panel complaint-detail">
+      <div class="head">
+        <h1><%= complaint.subject %></h1>
+        <span class="status status-<%= complaint.status %>"><%= complaint.status.replace('_', ' ') %></span>
+      </div>
+      <div class="ref">Reference #<%= complaint._id.toString().slice(-6).toUpperCase() %> &middot; submitted <%= complaint.createdAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %></div>
+      <span class="tag"><%= complaint.category %></span>
+
+      <div class="body-text"><%= complaint.description %></div>
+
+      <hr class="divider">
+
+      <h3 style="font-size:1.1rem;">Response from staff</h3>
+      <% if (complaint.responses.length === 0) { %>
+        <p style="color:var(--ink-soft);">No response yet. You'll see updates here as staff review your complaint.</p>
+      <% } else { %>
+        <div class="thread">
+          <% complaint.responses.forEach(r => { %>
+            <div class="response">
+              <div class="who">
+                <%= r.staff ? r.staff.fullName : 'Staff' %>
+                <span class="when">&middot; <%= r.createdAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+              </div>
+              <div><%= r.message %></div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,33 @@
+<% locals.title = 'Log in' %>
+<%- include('partials/header') %>
+
+  <div class="page narrow">
+    <div class="page-header">
+      <h1>Log in</h1>
+      <p>Students and staff use the same login. You'll land on the right dashboard automatically.</p>
+    </div>
+
+    <div class="panel">
+      <% if (error) { %>
+        <div class="alert alert-error"><%= error %></div>
+      <% } %>
+
+      <form class="stack" action="/login" method="POST">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="<%= email || '' %>" required autofocus>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Log in</button>
+      </form>
+    </div>
+
+    <p style="margin-top:1rem; color:var(--ink-soft); font-size:0.9rem;">
+      New here? <a href="/register">Create a student account</a>
+    </p>
+  </div>
+
+<%- include('partials/footer') %>

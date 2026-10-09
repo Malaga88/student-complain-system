@@ -1,0 +1,38 @@
+<% locals.title = 'New complaint' %>
+<%- include('../partials/header') %>
+
+  <div class="page narrow">
+    <div class="page-header">
+      <h1>Report a complaint</h1>
+      <p>Be as specific as you can — it helps staff act on it faster.</p>
+    </div>
+
+    <div class="panel">
+      <% if (error) { %>
+        <div class="alert alert-error"><%= error %></div>
+      <% } %>
+
+      <form class="stack" action="/student/complaints/new" method="POST">
+        <div class="field">
+          <label for="category">Category</label>
+          <select id="category" name="category" required>
+            <option value="" disabled <%= !form.category ? 'selected' : '' %>>Choose a category</option>
+            <% categories.forEach(cat => { %>
+              <option value="<%= cat %>" <%= form.category === cat ? 'selected' : '' %>><%= cat %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="field">
+          <label for="subject">Subject</label>
+          <input type="text" id="subject" name="subject" value="<%= form.subject || '' %>" placeholder="A short summary, e.g. Leaking roof in Hostel C" required>
+        </div>
+        <div class="field">
+          <label for="description">What happened?</label>
+          <textarea id="description" name="description" placeholder="Give the full details: what happened, when, and where." required><%= form.description || '' %></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit complaint</button>
+      </form>
+    </div>
+  </div>
+
+<%- include('../partials/footer') %>

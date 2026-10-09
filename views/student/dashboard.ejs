@@ -1,0 +1,36 @@
+<% locals.title = 'My complaints' %>
+<%- include('../partials/header') %>
+
+  <div class="page">
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-end; gap:1rem; flex-wrap:wrap;">
+      <div>
+        <h1>My complaints</h1>
+        <p>Everything you've submitted, and where each one stands.</p>
+      </div>
+      <a class="btn btn-primary" href="/student/complaints/new">New complaint</a>
+    </div>
+
+    <% if (complaints.length === 0) { %>
+      <div class="panel empty">
+        <h3>No complaints yet</h3>
+        <p>When something's not right, this is where you report it.</p>
+        <p><a class="btn btn-primary" href="/student/complaints/new">Submit your first complaint</a></p>
+      </div>
+    <% } else { %>
+      <div class="case-list">
+        <% complaints.forEach(c => { %>
+          <a class="case-row status-<%= c.status %>" href="/student/complaints/<%= c._id %>">
+            <span class="ref">#<%= c._id.toString().slice(-6).toUpperCase() %></span>
+            <span class="meta">
+              <div class="subject"><%= c.subject %></div>
+              <div class="sub"><%= c.category %></div>
+            </span>
+            <span class="status status-<%= c.status %>"><%= c.status.replace('_', ' ') %></span>
+            <span class="when"><%= c.createdAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+<%- include('../partials/footer') %>

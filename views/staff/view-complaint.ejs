@@ -1,0 +1,67 @@
+<% locals.title = complaint.subject %>
+<%- include('../partials/header') %>
+
+  <div class="page">
+    <p><a href="/staff/dashboard">&larr; Back to all complaints</a></p>
+
+    <div class="panel complaint-detail">
+      <div class="head">
+        <h1><%= complaint.subject %></h1>
+        <span class="status status-<%= complaint.status %>"><%= complaint.status.replace('_', ' ') %></span>
+      </div>
+      <div class="ref">
+        Reference #<%= complaint._id.toString().slice(-6).toUpperCase() %> &middot;
+        submitted <%= complaint.createdAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+        by <%= complaint.student ? complaint.student.fullName : 'Unknown student' %>
+        <% if (complaint.student) { %>(<%= complaint.student.matricNumber %>, <%= complaint.student.department %>)<% } %>
+      </div>
+      <span class="tag"><%= complaint.category %></span>
+
+      <div class="body-text"><%= complaint.description %></div>
+
+      <hr class="divider">
+
+      <form class="status-form" action="/staff/complaints/<%= complaint._id %>/status" method="POST">
+        <label for="status" style="font-weight:500; font-size:0.92rem;">Update status:</label>
+        <select id="status" name="status">
+          <% statuses.forEach(s => { %>
+            <option value="<%= s %>" <%= complaint.status === s ? 'selected' : '' %>><%= s.replace('_', ' ') %></option>
+          <% }) %>
+        </select>
+        <button class="btn btn-ghost btn-small" type="submit">Save</button>
+      </form>
+
+      <hr class="divider">
+
+      <h3 style="font-size:1.1rem;">Responses</h3>
+      <% if (complaint.responses.length === 0) { %>
+        <p style="color:var(--ink-soft);">No response sent yet.</p>
+      <% } else { %>
+        <div class="thread" style="margin-bottom:1.5rem;">
+          <% complaint.responses.forEach(r => { %>
+            <div class="response">
+              <div class="who">
+                <%= r.staff ? r.staff.fullName : 'Staff' %>
+                <span class="when">&middot; <%= r.createdAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+              </div>
+              <div><%= r.message %></div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <% if (error) { %>
+        <div class="alert alert-error"><%= error %></div>
+      <% } %>
+
+      <form class="stack" action="/staff/complaints/<%= complaint._id %>/respond" method="POST">
+        <div class="field">
+          <label for="message">Write a response</label>
+          <textarea id="message" name="message" placeholder="Let the student know what you're doing about this."></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit" style="align-self:flex-start;">Send response</button>
+      </form>
+    </div>
+  </div>
+
+<%- include('../partials/footer') %>

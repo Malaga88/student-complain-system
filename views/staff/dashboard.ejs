@@ -1,0 +1,54 @@
+<% locals.title = 'All complaints' %>
+<%- include('../partials/header') %>
+
+  <div class="page">
+    <div class="page-header">
+      <h1>All complaints</h1>
+      <p>Everything students have submitted, in one place.</p>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat"><span class="n"><%= counts.total %></span><span class="l">Total</span></div>
+      <div class="stat"><span class="n"><%= counts.pending %></span><span class="l">Pending</span></div>
+      <div class="stat"><span class="n"><%= counts.in_progress %></span><span class="l">In progress</span></div>
+      <div class="stat"><span class="n"><%= counts.resolved %></span><span class="l">Resolved</span></div>
+    </div>
+
+    <div class="filters">
+      <a href="/staff/dashboard" class="<%= !activeStatus ? 'active' : '' %>">All statuses</a>
+      <% statuses.forEach(s => { %>
+        <a href="/staff/dashboard?status=<%= s %><%= activeCategory ? '&category=' + activeCategory : '' %>"
+           class="<%= activeStatus === s ? 'active' : '' %>"><%= s.replace('_', ' ') %></a>
+      <% }) %>
+    </div>
+    <div class="filters">
+      <a href="/staff/dashboard<%= activeStatus ? '?status=' + activeStatus : '' %>" class="<%= !activeCategory ? 'active' : '' %>">All categories</a>
+      <% categories.forEach(cat => { %>
+        <a href="/staff/dashboard?category=<%= cat %><%= activeStatus ? '&status=' + activeStatus : '' %>"
+           class="<%= activeCategory === cat ? 'active' : '' %>"><%= cat %></a>
+      <% }) %>
+    </div>
+
+    <% if (complaints.length === 0) { %>
+      <div class="panel empty">
+        <h3>No complaints match this filter</h3>
+        <p>Try a different status or category.</p>
+      </div>
+    <% } else { %>
+      <div class="case-list">
+        <% complaints.forEach(c => { %>
+          <a class="case-row status-<%= c.status %>" href="/staff/complaints/<%= c._id %>">
+            <span class="ref">#<%= c._id.toString().slice(-6).toUpperCase() %></span>
+            <span class="meta">
+              <div class="subject"><%= c.subject %></div>
+              <div class="sub"><%= c.student ? c.student.fullName : 'Unknown student' %> &middot; <%= c.category %></div>
+            </span>
+            <span class="status status-<%= c.status %>"><%= c.status.replace('_', ' ') %></span>
+            <span class="when"><%= c.createdAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+<%- include('../partials/footer') %>
